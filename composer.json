@@ -1,0 +1,17 @@
+{
+    "name": "petenelson/progress-estimator",
+    "description": "PHP class to estimate time remaining for a list of tasks",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^8.1@dev"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pete Nelson",
+            "email": "pete@petenelson.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
