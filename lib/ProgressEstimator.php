@@ -1,25 +1,38 @@
 <?php
 /**
  * Estimator class to get estimated time left.
+ *
+ * @package PeteNelson\PackageEstimator
  */
+
+// phpcs:disable Generic.WhiteSpace.DisallowTabIndent
 
 namespace PeteNelson;
 
-class ProgressEstimator {
+class ProgressEstimator
+{
 
 	public $total      = 0;
 	public $count      = 0;
-	public $start_time = 0;
+	public $startTime  = 0;
+	public $args       = [];
 
 	/**
 	 * Creates a new Estimator class.
 	 *
-	 * @param int $total The total number of items for estimating.
+	 * @param int   $total The total number of items for estimating.
+	 * @param array $args  List of additional arguments.
 	 */
-	public function __construct( $total = 0 ) {
+	public function __construct($total = 0, $args = [])
+	{
 		$this->total      = $total;
 		$this->count      = 0;
-		$this->start_time = time();
+		$this->startTime  = time();
+
+		$this->args = ProgressEstimatorUtils::parseArgs(
+			$args,
+			[]
+		);
 	}
 
 	/**
@@ -27,8 +40,11 @@ class ProgressEstimator {
 	 *
 	 * @return void
 	 */
-	public function tick() {
-		$this->count++;
+	public function tick()
+	{
+		if ($this->count < $this->total) {
+			$this->count++;
+		}
 	}
 
 	/**
@@ -36,10 +52,11 @@ class ProgressEstimator {
 	 *
 	 * @return int
 	 */
-	public function seconds_left() {
+	public function secondsLeft()
+	{
 		$per_second = $this->per_second();
 		$items_left = $this->total - $this->count;
-		return intval( ceil( $items_left * $per_second ) );
+		return intval(ceil($items_left * $per_second));
 	}
 
 	/**
@@ -47,8 +64,9 @@ class ProgressEstimator {
 	 *
 	 * @return int
 	 */
-	public function elapsed_seconds() {
-		return time() - $this->start_time;
+	public function elapsedSeconds()
+	{
+		return time() - $this->startTime ;
 	}
 
 	/**
@@ -56,11 +74,12 @@ class ProgressEstimator {
 	 *
 	 * @return float
 	 */
-	public function per_second() {
-		$per_second = floatval( 0 );
+	public function perSecond()
+	{
+		$per_second = floatval(0);
 		$elapsed = $this->elapsed_seconds();
-		if ( $elapsed > 0 && $this->count > 0 ) {
-			$per_second = round( $this->count / $elapsed, 1 );
+		if ($elapsed > 0 && $this->count > 0) {
+			$per_second = round($this->count / $elapsed, 1);
 		}
 
 		return $per_second;
@@ -73,8 +92,9 @@ class ProgressEstimator {
 	 * @param int  $time The time span in seconds to format.
 	 * @return string  The formatted time span.
 	 */
-	public function format_time( $time ) {
+	public function formatTime($time)
+	{
 		// From https://github.com/wp-cli/php-cli-tools/blob/master/lib/cli/Notify.php
-		return floor( $time / 60 ) . ':' . str_pad( $time % 60, 2, 0, STR_PAD_LEFT );
+		return floor($time / 60) . ':' . str_pad($time % 60, 2, 0, STR_PAD_LEFT);
 	}
 }
