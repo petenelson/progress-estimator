@@ -15,8 +15,8 @@ class ProgressEstimatorUtils
 	/**
 	 * Merge user defined arguments into defaults array.
 	 *
-	 * @param string|array|object $args     Value to merge with $defaults.
-	 * @param array               $defaults Optional. Array that serves as the defaults. Default empty.
+	 * @param array|object $args     Value to merge with $defaults.
+	 * @param array        $defaults Optional. Array that serves as the defaults. Default empty.
 	 * @return array Merged user defined values with defaults.
 	 */
 	public static function parseArgs($args, $defaults)
@@ -68,16 +68,18 @@ class ProgressEstimatorUtils
 	}
 
 	/**
-	 * Takes a time span given in seconds and formats it for display. The
+	 * Takes a time span given in milliseconds and formats it for display. The
 	 * returned string will be in MM:SS form.
 	 *
-	 * @param int  $time The time span in seconds to format.
+	 * @param int  $time The time span in milliseconds to format.
 	 * @return string  The formatted time span.
 	 */
-	public function formatTime($time)
+	public static function formatTime($time)
 	{
+		// Switch this to seconds.
+		$time = $time / 1000;
+
 		// From https://github.com/wp-cli/php-cli-tools/blob/master/lib/cli/Notify.php
 		return floor($time / 60) . ':' . str_pad($time % 60, 2, 0, STR_PAD_LEFT);
 	}
-
 }

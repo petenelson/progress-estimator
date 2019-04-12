@@ -20,11 +20,14 @@ class EstimatorTests extends TestCase
 		$time = (int) round(microtime(true) * 1000);
 
 		$estimator = new \PHPEstimator\ProgressEstimator();
-		$this->assertGreaterThanOrEqual($time, $estimator->startTime);
+		$this->assertGreaterThanOrEqual($time, $estimator->currentTime);
 
 		// Test autostart.
 		$estimator = new \PHPEstimator\ProgressEstimator(0, ['auto_start' => false]);
-		$this->assertSame(0, $estimator->startTime);
+		$this->assertSame(0, $estimator->currentTime);
+
+		$estimator->tick();
+		$this->assertGreaterThan(0, $estimator->currentTime);
 	}
 
 	public function testTotalAndCount()
@@ -96,6 +99,10 @@ class EstimatorTests extends TestCase
 
 	public function testTimePerItem()
 	{
+		// Tell it there are no items.
+		$estimator = new \PHPEstimator\ProgressEstimator(0);
+		$this->assertSame(0, $estimator->timePerItem());
+
 		// Tell it there are ten items.
 		$estimator = new \PHPEstimator\ProgressEstimator(10);
 
@@ -117,7 +124,6 @@ class EstimatorTests extends TestCase
 
 	public function testEstimatedTime()
 	{
-
 		$sleep_time = 100;
 
 		// Tell it there are ten items.

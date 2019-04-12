@@ -27,6 +27,14 @@ class UtilsTests extends TestCase
 			'value3' => 123,
 		];
 
+		// Test without defaults.
+		$args = \PHPEstimator\ProgressEstimatorUtils::parseArgs($args, 'hello world');
+
+		$this->assertSame($args['value1'], 'xyz');
+		$this->assertSame($args['value4'], 'hello world');
+		$this->assertTrue(!isset($args['value2']));
+		$this->assertTrue(!isset($args['value3']));
+
 		$args = \PHPEstimator\ProgressEstimatorUtils::parseArgs($args, $defaults);
 
 		$this->assertSame($args['value1'], 'xyz');
@@ -67,5 +75,16 @@ class UtilsTests extends TestCase
 
 		$this->assertGreaterThanOrEqual($sleep_time, $total_ms);
 		$this->assertLessThan($sleep_time + 50, $total_ms);
+	}
+
+	public function testFormatTime()
+	{
+		$estimator = new \PHPEstimator\ProgressEstimator(0);
+
+		$time_left = $estimator->formatTime(10000);
+		$this->assertSame('0:10', $time_left);
+
+		$time_left = $estimator->formatTime(70000);
+		$this->assertSame('1:10', $time_left);
 	}
 }

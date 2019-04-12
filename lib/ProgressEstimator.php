@@ -12,12 +12,11 @@ namespace PHPEstimator;
 class ProgressEstimator
 {
 
-	public $total      = 0;
-	public $count      = 0;
-	public $startTime  = 0;
-	public $args       = [];
-	public $items      = [];
-	private $currentTime = 0;
+	public $total       = 0;
+	public $count       = 0;
+	public $args        = [];
+	public $items       = [];
+	public $currentTime = 0;
 
 	/**
 	 * Creates a new Estimator class.
@@ -27,9 +26,9 @@ class ProgressEstimator
 	 */
 	public function __construct($total = 0, $args = [])
 	{
-		$this->total      = $total;
-		$this->count      = 0;
-		$this->startTime  = 0;
+		$this->total       = $total;
+		$this->count       = 0;
+		$this->currentTime = 0;
 
 		$this->args = ProgressEstimatorUtils::parseArgs(
 			$args,
@@ -53,8 +52,7 @@ class ProgressEstimator
 	 */
 	public function start()
 	{
-		$this->startTime = ProgressEstimatorUtils::currentTime();
-		$this->currentTime = $this->startTime;
+		$this->currentTime = ProgressEstimatorUtils::currentTime();
 	}
 
 	/**
@@ -66,7 +64,7 @@ class ProgressEstimator
 	public function tick()
 	{
 		// Start the estimator if it wasn't started automatically.
-		if (0 === $this->startTime) {
+		if (0 === $this->currentTime) {
 			$this->start();
 		}
 
@@ -91,16 +89,6 @@ class ProgressEstimator
 	{
 		$items_left = $this->total - $this->count;
 		return intval(ceil($items_left * $this->timePerItem()));
-	}
-
-	/**
-	 * Gets the elapsed number of milliseconds since the estimator started.
-	 *
-	 * @return int
-	 */
-	public function elapsedTime()
-	{
-		return ProgressEstimatorUtils::currentTime() - $this->startTime ;
 	}
 
 	/**
@@ -130,14 +118,14 @@ class ProgressEstimator
 	}
 
 	/**
-	 * Takes a time span given in seconds and formats it for display. The
+	 * Takes a time span given in milliseconds and formats it for display. The
 	 * returned string will be in MM:SS form.
 	 *
-	 * @param int  $time The time span in seconds to format.
+	 * @param int  $time The time span in milliseconds to format.
 	 * @return string  The formatted time span.
 	 */
 	public function formatTime($time)
 	{
-		ProgressEstimatorUtils::formatTime($time);
+		return ProgressEstimatorUtils::formatTime($time);
 	}
 }
