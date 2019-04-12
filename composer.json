@@ -1,5 +1,5 @@
 {
-	"name": "petenelson/progress-estimator",
+	"name": "phpestimator/progress-estimator",
 	"description": "PHP class to estimate time remaining for a list of tasks",
 	"type": "library",
 	"license": "MIT",
