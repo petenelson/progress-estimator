@@ -47,11 +47,25 @@ class UtilsTests extends TestCase
 		$this->assertSame($args['value4'], 'hello world');
 	}
 
-	public function testTime()
+	public function testTimes()
 	{
 		$time_ms   = (int) round(microtime(true) * 1000);
 		$util_time = \PHPEstimator\ProgressEstimatorUtils::currentTime();
 
 		$this->assertGreaterThanOrEqual($time_ms, $util_time);
+
+		$this->assertSame(2000000, \PHPEstimator\ProgressEstimatorUtils::msToMicrotime(2000));
+	}
+
+	public function testSleep()
+	{
+		$sleep_time = 500;
+		$start_time = \PHPEstimator\ProgressEstimatorUtils::currentTime();
+		\PHPEstimator\ProgressEstimatorUtils::sleep($sleep_time);
+
+		$total_ms = \PHPEstimator\ProgressEstimatorUtils::currentTime() - $start_time;
+
+		$this->assertGreaterThanOrEqual($sleep_time, $total_ms);
+		$this->assertLessThan($sleep_time + 50, $total_ms);
 	}
 }

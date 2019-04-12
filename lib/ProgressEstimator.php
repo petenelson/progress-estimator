@@ -17,7 +17,7 @@ class ProgressEstimator
 	public $startTime  = 0;
 	public $args       = [];
 	public $items      = [];
-	private $_index    = 0;
+	private $currentTime = 0;
 
 	/**
 	 * Creates a new Estimator class.
@@ -39,7 +39,7 @@ class ProgressEstimator
 		);
 
 		// Setup the list of items for tracking times.
-		array_fill( 0, $this->total, false );
+		$this->items = array_fill(0, $this->total, false);
 
 		if (true === $this->args['auto_start']) {
 			$this->start();
@@ -51,19 +51,34 @@ class ProgressEstimator
 	 *
 	 * @return void
 	 */
-	public function start() {
+	public function start()
+	{
 		$this->startTime = ProgressEstimatorUtils::currentTime();
+		$this->currentTime = $this->startTime;
 	}
 
 	/**
-	 * Increments the total number of items processed.
+	 * Increments the total number of items processed and stores the
+	 * execution time of the current item in the items array.
 	 *
 	 * @return void
 	 */
 	public function tick()
 	{
+		// Start the estimator if it wasn't started automatically.
+		if (0 === $this->startTime) {
+			$this->start();
+		}
+
 		if ($this->count < $this->total) {
+			// Get the new current time.
+			$time = ProgressEstimatorUtils::currentTime();
+
+			// Flag how long this item took to process.
+			$this->items[$this->count] = $time - $this->currentTime;
+
 			$this->count++;
+			$this->currentTime = $time;
 		}
 	}
 
@@ -74,35 +89,44 @@ class ProgressEstimator
 	 */
 	public function timeLeft()
 	{
-		$per_second = $this->per_second();
 		$items_left = $this->total - $this->count;
-		return intval(ceil($items_left * $per_second));
+		return intval(ceil($items_left * $this->timePerItem()));
 	}
 
 	/**
-	 * Gets the elapsed number of seconds since the class was created.
+	 * Gets the elapsed number of milliseconds since the estimator started.
 	 *
 	 * @return int
 	 */
 	public function elapsedTime()
 	{
-		return time() - $this->startTime ;
+		return ProgressEstimatorUtils::currentTime() - $this->startTime ;
 	}
 
 	/**
-	 * Gets the number of items processed per second.
+	 * Gets the total number of processing time in milliseconds for all
+	 * of the items.
 	 *
-	 * @return float
+	 * @return int
 	 */
-	public function perSecond()
+	public function totalProcessingTime()
 	{
-		$per_second = floatval(0);
-		$elapsed = $this->elapsedTime();
-		if ($elapsed > 0 && $this->count > 0) {
-			$per_second = round($this->count / $elapsed, 1);
-		}
+		return array_sum($this->items);
+	}
 
-		return $per_second;
+	/**
+	 * Gets the execution time per item in milliseconds. Defaults to an
+	 * overall average.
+	 *
+	 * @return int
+	 */
+	public function timePerItem()
+	{
+		if ($this->count > 0) {
+			return array_sum($this->items) / $this->count;
+		} else {
+			return 0;
+		}
 	}
 
 	/**
@@ -114,7 +138,6 @@ class ProgressEstimator
 	 */
 	public function formatTime($time)
 	{
-		// From https://github.com/wp-cli/php-cli-tools/blob/master/lib/cli/Notify.php
-		return floor($time / 60) . ':' . str_pad($time % 60, 2, 0, STR_PAD_LEFT);
+		ProgressEstimatorUtils::formatTime($time);
 	}
 }

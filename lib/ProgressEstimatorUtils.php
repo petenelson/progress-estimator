@@ -44,4 +44,40 @@ class ProgressEstimatorUtils
 	{
 		return $milliseconds = (int) round(microtime(true) * 1000);
 	}
+
+	/**
+	 * Converts milliseconds to microtime.
+	 *
+	 * @param  int $milliseconds Number of milliseconds.
+	 * @return int
+	 */
+	public static function msToMicrotime($milliseconds)
+	{
+		return $milliseconds * 1000;
+	}
+
+	/**
+	 * Sleeps execution the supplied number of milliseconds.
+	 *
+	 * @param  int $milliseconds Number of milliseconds.
+	 * @return int
+	 */
+	public static function sleep($milliseconds)
+	{
+		usleep(self::msToMicrotime($milliseconds));
+	}
+
+	/**
+	 * Takes a time span given in seconds and formats it for display. The
+	 * returned string will be in MM:SS form.
+	 *
+	 * @param int  $time The time span in seconds to format.
+	 * @return string  The formatted time span.
+	 */
+	public function formatTime($time)
+	{
+		// From https://github.com/wp-cli/php-cli-tools/blob/master/lib/cli/Notify.php
+		return floor($time / 60) . ':' . str_pad($time % 60, 2, 0, STR_PAD_LEFT);
+	}
+
 }
