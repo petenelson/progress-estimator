@@ -2,12 +2,12 @@
 /**
  * Utilites class for the progress estimator.
  *
- * @package PeteNelson\PackageEstimator
+ * @package PHPEstimator\PackageEstimator
  */
 
 // phpcs:disable Generic.WhiteSpace.DisallowTabIndent
 
-namespace PeteNelson;
+namespace PHPEstimator;
 
 class ProgressEstimatorUtils
 {
@@ -33,5 +33,15 @@ class ProgressEstimatorUtils
 		}
 
 		return $r;
+	}
+
+	/**
+	 * Gets the current time in milliseconds.
+	 *
+	 * @return int
+	 */
+	public static function currentTime()
+	{
+		return $milliseconds = (int) round(microtime(true) * 1000);
 	}
 }

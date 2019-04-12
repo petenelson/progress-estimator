@@ -2,12 +2,12 @@
 /**
  * Estimator class to get estimated time left.
  *
- * @package PeteNelson\PackageEstimator
+ * @package PHPEstimator\PackageEstimator
  */
 
 // phpcs:disable Generic.WhiteSpace.DisallowTabIndent
 
-namespace PeteNelson;
+namespace PHPEstimator;
 
 class ProgressEstimator
 {
@@ -16,6 +16,8 @@ class ProgressEstimator
 	public $count      = 0;
 	public $startTime  = 0;
 	public $args       = [];
+	public $items      = [];
+	private $_index    = 0;
 
 	/**
 	 * Creates a new Estimator class.
@@ -27,12 +29,30 @@ class ProgressEstimator
 	{
 		$this->total      = $total;
 		$this->count      = 0;
-		$this->startTime  = time();
+		$this->startTime  = 0;
 
 		$this->args = ProgressEstimatorUtils::parseArgs(
 			$args,
-			[]
+			[
+				'auto_start' => true,
+			]
 		);
+
+		// Setup the list of items for tracking times.
+		array_fill( 0, $this->total, false );
+
+		if (true === $this->args['auto_start']) {
+			$this->start();
+		}
+	}
+
+	/**
+	 * Sets the start time.
+	 *
+	 * @return void
+	 */
+	public function start() {
+		$this->startTime = ProgressEstimatorUtils::currentTime();
 	}
 
 	/**
@@ -48,11 +68,11 @@ class ProgressEstimator
 	}
 
 	/**
-	 * Gets the estimated number of seconds left.
+	 * Gets the estimated number of milliseconds left.
 	 *
 	 * @return int
 	 */
-	public function secondsLeft()
+	public function timeLeft()
 	{
 		$per_second = $this->per_second();
 		$items_left = $this->total - $this->count;
@@ -64,7 +84,7 @@ class ProgressEstimator
 	 *
 	 * @return int
 	 */
-	public function elapsedSeconds()
+	public function elapsedTime()
 	{
 		return time() - $this->startTime ;
 	}
@@ -77,7 +97,7 @@ class ProgressEstimator
 	public function perSecond()
 	{
 		$per_second = floatval(0);
-		$elapsed = $this->elapsed_seconds();
+		$elapsed = $this->elapsedTime();
 		if ($elapsed > 0 && $this->count > 0) {
 			$per_second = round($this->count / $elapsed, 1);
 		}

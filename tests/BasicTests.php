@@ -2,12 +2,12 @@
 /**
  * Basic unit tests for the progress estimator.
  *
- * @package PeteNelson\PackageEstimator
+ * @package PHPEstimator\PackageEstimator
  */
 
 // phpcs:disable Generic.WhiteSpace.DisallowTabIndent
 
-namespace PeteNelson\ProgressEstimatorTests;
+namespace PHPEstimator\ProgressEstimatorTests;
 
 use PHPUnit\Framework\TestCase;
 
@@ -16,14 +16,20 @@ class BasicTests extends TestCase
 
 	public function testStartTime()
 	{
-		$time = time();
-		$estimator = new \PeteNelson\ProgressEstimator();
-		$this->assertSame($time, $estimator->startTime);
+
+		$time = (int) round(microtime(true) * 1000);
+
+		$estimator = new \PHPEstimator\ProgressEstimator();
+		$this->assertGreaterThanOrEqual($time, $estimator->startTime);
+
+		// Test autostart.
+		$estimator = new \PHPEstimator\ProgressEstimator(0, ['auto_start' => false]);
+		$this->assertSame(0, $estimator->startTime);
 	}
 
 	public function testTotalAndCount()
 	{
-		$estimator = new \PeteNelson\ProgressEstimator(10);
+		$estimator = new \PHPEstimator\ProgressEstimator(10);
 		$this->assertSame(10, $estimator->total);
 
 		$estimator->tick();
