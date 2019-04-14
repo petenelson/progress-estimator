@@ -3,7 +3,9 @@ php:
   - '7.1'
   - '7.2'
 
-cache: bundler
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 install:
   - composer install
