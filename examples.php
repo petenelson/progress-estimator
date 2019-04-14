@@ -25,7 +25,6 @@ $items = [
 	'Meatball tenderloin picanha',
 ];
 
-// Display the current item processed and estimated time remaining.
 $output = sprintf(
 	'Processing %1$d items' . PHP_EOL,
 	count($items)
