@@ -21,22 +21,28 @@ Processing 12 items
 [12/12]: Meatball tenderloin picanha (0:00)
 ````
 
+## Installation and Usage
+This package can be installed via composer.
+```
+composer require petenelson/progress-estimator
+```
 
-## Usage
-First, install the package using composer. `composer require petenelson/progress-estimator`. Some example code below, and be sure
-to check the [examples.php file](examples.php) for a working implementation.
+Here is some example code below, and be sure to check the [examples.php file](examples.php) for a working implementation.
 
 ```
 require_once __DIR__ . '/vendor/autoload.php';
 
+$items = get_large_list_of_items();
+$count = count($items);
+
 // Create the progress estimator.
-$estimator = new \PHPEstimator\ProgressEstimator(count($items));
+$estimator = new \PHPEstimator\ProgressEstimator($count);
 
 // Loop through the list of items to process.
-for ($i=0; $i < 100; $i++) {
+for ($i=0; $i < $count; $i++) {
 
-	// Perform some work.
-	some_long_running_process_here();
+	// Perform some work on each item.
+	some_long_running_process_here($items[$i]);
 
 	// Increments the counter and saves the execution time of that item.
 	$estimator->tick();
