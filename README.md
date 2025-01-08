@@ -1,7 +1,7 @@
 # Progress Estimator
 PHP library to estimate time remaining for a list of tasks.
 
-[![Build Status](https://travis-ci.org/petenelson/progress-estimator.svg?branch=master)](https://travis-ci.org/petenelson/progress-estimator) [![Percentage of issues still open](http://isitmaintained.com/badge/open/petenelson/progress-estimator.svg)](http://isitmaintained.com/project/petenelson/progress-estimator "Percentage of issues still open")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/petenelson/progress-estimator.svg)](http://isitmaintained.com/project/petenelson/progress-estimator "Percentage of issues still open")
 
 When processing a batch of items that takes a long time to run, this library can be used to to calculate and display the estimated time remaining.
 

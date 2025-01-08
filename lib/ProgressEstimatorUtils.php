@@ -78,6 +78,7 @@ class ProgressEstimatorUtils
 	{
 		// Switch this to seconds.
 		$time = $time / 1000;
+		$time = round($time);
 
 		// From https://github.com/wp-cli/php-cli-tools/blob/master/lib/cli/Notify.php
 		return floor($time / 60) . ':' . str_pad($time % 60, 2, 0, STR_PAD_LEFT);
